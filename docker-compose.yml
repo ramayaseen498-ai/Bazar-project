@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+
+  catalog:
+    build: ./catalog-server
+    ports:
+      - "5001:5001"
+
+  order:
+    build: ./order-server
+    ports:
+      - "5002:5002"
+    environment:
+      - CATALOG_URL=http://catalog:5001
+    depends_on:
+      - catalog
+
+  frontend:
+    build: ./frontend-server
+    ports:
+      - "5000:5000"
+    environment:
+      - CATALOG_URL=http://catalog:5001
+      - ORDER_URL=http://order:5002
+    depends_on:
+      - catalog
+      - order
+      
